@@ -1,4 +1,5 @@
-import pymongo 
+import pymongo
+from difflib import get_close_matches
 from pymongo import MongoClient 
 import array
 def translate(w):
@@ -7,25 +8,22 @@ def translate(w):
     collection=db["name-spellcheck"]
     results=collection.find({})
     for x in results:
-        #print(x)
         keys = x.keys()
         y=[]
         for k in x.values():
-	    #i=i+1
     	    y.append(k)
-    	#w=w.lower()
+    x=y[1:len(y)] #array of values in database
     flag=0
     for j in range(len(y)):
         if(w==y[j]):
             flag=1
+            #print("word exists")
     if(flag==1):
-        print("word exist")
+        print("name exists")
     else:
-        print("not exist")
-word = input("Enter word: ")
+        print("Did u mean:")
+        print(get_close_matches(w, x,n=2,cutoff=0.6))
+        print("not exits")
+
+word = input("Enter name: ")
 output = translate(word)
-if type(output) == list:
-    for item in output:
-        print(item)
-else:
-    print(output)
